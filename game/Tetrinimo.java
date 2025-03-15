@@ -6,7 +6,7 @@ public class Tetrinimo {
 
     public Tetrinimo(int[][] shape) {
         this.shape = shape;
-        this.x = 5; // Posición inicial en la mitad del tablero
+        this.x = 1; // Posición inicial en la mitad del tablero
         this.y = 0;
     }
 
