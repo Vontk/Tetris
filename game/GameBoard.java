@@ -15,7 +15,7 @@ public class GameBoard {
             for (int j = 0; j < 4; j++) {
                 if (shape[i][j] != 0) { // Only check if the piece has a pixel here
                     if (y + i + 1 >= HEIGHT || grid[x + j][y + i + 1] != 0) {
-                        return false; // Collision detected
+                        return false; // Collision
                     }
                 }
             }
