@@ -5,4 +5,7 @@ import game.GameBoard;
 public class Renderer {
     public Renderer(GameBoard board) {
     }
+
+    public void flashLine(int y) {
+    }
 }

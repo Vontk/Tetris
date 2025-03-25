@@ -3,6 +3,7 @@ package game;
 public class TetrisPiece {
     private int[][] shape;
     private int x, y;
+    private boolean placed;
 
     public TetrisPiece(int[][] shape) {
         this.shape = shape;
@@ -10,20 +11,14 @@ public class TetrisPiece {
         this.y = 0;
     }
 
-    public int[][] getShape() {
-        return shape;
-    }
+    public int[][] getShape() {return shape;}
     public int getX() {return x;}
     public int getY() {return y;}
-    public void moveLeft(){
-        x--;
-    }
-    public void moveRight(){
-        x++;
-    }
-    public void fall(){
-        y++;
-    }
+    public void moveLeft(){x--;}
+    public void moveRight(){x++;}
+    public void fall(){y++;}
+    public boolean isPlaced() {return placed;}
+    public void setPlaced(boolean placed) {this.placed = placed;}
 
     public void rotate() {
         if (shape == null || shape.length != 4 || shape[0].length != 4) {

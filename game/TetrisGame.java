@@ -17,17 +17,18 @@ public class TetrisGame {
     private static final int TARGET_FPS = 60;
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     private boolean running = true;
+    private TetrisPiece activePiece;
 
     public void startGame() {
         board = new GameBoard();
         renderer = new Renderer(board);
         inputHandler = new InputHandler(this);
         soundManager = new SoundManager();
+        board.setRenderer(renderer);
         start();
     }
 
     public void onGameOver() {
-        System.out.println("Game Over!");
         stop();
     }
 
@@ -43,6 +44,13 @@ public class TetrisGame {
     private void update() {
         // Verificar que la pieza actual haya llegado a tocar el piso, sino caer
         // si toco el piso, sedimentar, verificar si se completo una linea
+        if (activePiece.isPlaced()) {
+            activePiece = PieceFactory.newPice();
+        }
+        if (board.collided(activePiece)) {
+            board.placePiece(activePiece);
+        }
+
     }
 
     private void render() {
@@ -55,7 +63,7 @@ public class TetrisGame {
     }
 
     public static void main(String[] args) {
-        GameLoop game = new GameLoop(this);
+        TetrisGame game = new TetrisGame();
         game.start();
     }
 }
