@@ -6,11 +6,16 @@ import render.Renderer;
 public class GameBoard {
     private static final int WIDTH = 10;
     private static final int HEIGHT = 23;
-    private static final int[][] grid = new int[WIDTH][HEIGHT];
+    public static final int[][] grid = new int[WIDTH][HEIGHT];
     Renderer renderer;
+    boolean rendererSet = false;
+    private int eliminatedLines = 0;
+    private int score = 0;
+    private int level = 0;
 
     public void setRenderer(Renderer renderer) {
         this.renderer = renderer;
+        rendererSet = true;
     }
 
     public boolean collided(TetrisPiece piece) {
@@ -46,14 +51,41 @@ public class GameBoard {
     }
 
     public void checkLines() {
+        int linesClearedInOneMove = 0; // Contador de líneas eliminadas en una sola iteración
+
         for (int y = HEIGHT - 1; y >= 0; y--) { // Start from bottom row
             if (isLineFull(y)) {
                 clearLine(y);
                 renderer.flashLine(y);
                 shiftDown(y);
+                eliminatedLines++;
+                linesClearedInOneMove++; // Contamos la línea eliminada
                 y++; // Recheck the same row after shifting down
             }
         }
+
+        // Si se eliminaron líneas en este movimiento, actualizamos la puntuación
+        if (linesClearedInOneMove > 0) {
+            updateScore(linesClearedInOneMove);
+            updateLevel();
+        }
+    }
+
+    private void updateScore(int linesCleared) {
+        int baseScore = switch (linesCleared) {
+            case 1 -> 40;
+            case 2 -> 100;
+            case 3 -> 300;
+            case 4 -> 1200;
+            default -> 0;
+        };
+
+        score += baseScore * (level + 1); // Puntos escalados según el nivel
+        renderer.renderAddedScore(baseScore *(level +1));
+    }
+
+    private void updateLevel() {
+        level = eliminatedLines/10;
     }
 
     private boolean isLineFull(int y) {
@@ -91,5 +123,4 @@ public class GameBoard {
             grid[x][0] = 0;
         }
     }
-
 }

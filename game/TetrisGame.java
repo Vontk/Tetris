@@ -18,6 +18,7 @@ public class TetrisGame {
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     private boolean running = true;
     private TetrisPiece activePiece;
+    private boolean waitCondition = false;
 
     public void startGame() {
         board = new GameBoard();
@@ -31,6 +32,8 @@ public class TetrisGame {
     public void onGameOver() {
         stop();
     }
+
+    private void setWaitCondition(boolean waitCondition){this.waitCondition = waitCondition;}
 
     public void start() {
         executor.scheduleAtFixedRate(() -> {
@@ -49,6 +52,9 @@ public class TetrisGame {
         }
         if (board.collided(activePiece)) {
             board.placePiece(activePiece);
+        }
+        if (board.lineHasBlock(0)){
+            onGameOver();
         }
 
     }
