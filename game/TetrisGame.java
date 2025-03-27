@@ -14,7 +14,7 @@ public class TetrisGame {
     private Renderer renderer;
     private InputHandler inputHandler;
     private SoundManager soundManager;
-    private static final int TARGET_FPS = 60;
+    private static final int TARGET_FPS = 5;
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     private boolean running = true;
     public TetrisPiece activePiece;
@@ -40,14 +40,10 @@ public class TetrisGame {
 
     public void start() {
         executor.scheduleAtFixedRate(() -> {
-            try {
                 if (running) {
                     update();
                     render();
                 }
-            } catch (Exception e) {
-                e.printStackTrace(); // Print any exceptions that occur
-            }
         }, 0, 1000 / TARGET_FPS, TimeUnit.MILLISECONDS);
     }
 
@@ -57,20 +53,19 @@ public class TetrisGame {
             activePiece = PieceFactory.newPiece();
         }
 
-        if (board.collided(activePiece)) {
+        if (board.canMoveDown(activePiece)) {
+            activePiece.fall(); // Move the piece down
+        } else {
             board.placePiece(activePiece);
             activePiece = PieceFactory.newPiece(); // Create a new piece
-        } else {
-            activePiece.fall(); // Move the piece down
         }
         if (board.lineHasBlock(0)) {
             onGameOver();
         }
 
-            // ... your existing code ...
             System.out.println("Active Piece X: " + activePiece.getX() + ", Y: " + activePiece.getY());
             System.out.println("Grid: " + java.util.Arrays.deepToString(board.grid));
-            // ...
+
     }
 
     private void render() {

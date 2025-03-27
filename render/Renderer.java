@@ -12,13 +12,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Renderer extends JPanel {
-    private static final int TILE_SIZE = 40; // Tamaño de la imagen (20x20)
+    private static final int TILE_SIZE = 35; // Tamaño de la imagen (20x20)
     private static final int GRID_WIDTH = 10;
-    private static final int GRID_HEIGHT = 20;
+    private static final int GRID_HEIGHT = 23;
+    private static final int GRID_RENDER_HEIGHT = 20;
     private static final int SCORE_PANEL_HEIGHT = 40; // Espacio para el score en la parte superior
     private GameBoard gameBoard;
     private Map<Integer, Image> imageMap;
-    private int FONT_SIZE = 24;
     private Font tetrisFont;
     private TetrisGame tetrisGame;
 
@@ -33,7 +33,7 @@ public class Renderer extends JPanel {
         loadImages();
 
         // Ajustar el tamaño del panel (200x400 + 40 de espacio extra arriba)
-        setPreferredSize(new Dimension(GRID_WIDTH * TILE_SIZE, GRID_HEIGHT * TILE_SIZE + SCORE_PANEL_HEIGHT));
+        setPreferredSize(new Dimension(GRID_WIDTH * TILE_SIZE, GRID_RENDER_HEIGHT * TILE_SIZE + SCORE_PANEL_HEIGHT));
     }
 
     // Cargar imágenes de los bloques
@@ -54,15 +54,19 @@ public class Renderer extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // Dibujar el área de score en la parte superior
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, getWidth(), SCORE_PANEL_HEIGHT); // Fondo negro
-        g.setFont(tetrisFont);
-        g.setColor(Color.WHITE);
-        g.drawString("Score: "+ gameBoard.score, 140, 28); // Puntaje
-        g.drawString("Level: "+ gameBoard.level,10 , 28); // Nivel
-
         // Dibujar las celdas del grid, **desplazado hacia abajo por SCORE_PANEL_HEIGHT**
+        for (int y = 0; y < GRID_HEIGHT; y++) {
+            for (int x = 0; x < GRID_WIDTH; x++) {
+                int value = gameBoard.grid[x][y]; // Obtener el valor de la celda
+                Image img = imageMap.get(value); // Obtener la imagen correspondiente
+                if (img != null) {
+                    // Dibujar la imagen desplazada para dejar espacio en la parte superior
+                    g.drawImage(img, x * TILE_SIZE, y * TILE_SIZE + SCORE_PANEL_HEIGHT -3*TILE_SIZE, TILE_SIZE, TILE_SIZE, this);
+                }
+            }
+        }
+
+        // Dibujar la pieza activa
         TetrisPiece piece = tetrisGame.activePiece;
         int pieceX = piece.getX();
         int pieceY = piece.getY();
@@ -70,21 +74,18 @@ public class Renderer extends JPanel {
             for (int j = 0; j < 4; j++){
                 int value = piece.getShape()[i][j];
                 Image image = imageMap.get(value);
-                if (image != null){
-                    g.drawImage(image,(pieceX + i) * TILE_SIZE,(pieceY + j) * TILE_SIZE + SCORE_PANEL_HEIGHT,this);
+                if (image != null && value != 0){
+                    g.drawImage(image,(pieceX + i) * TILE_SIZE,(pieceY + j) * TILE_SIZE + SCORE_PANEL_HEIGHT -3*TILE_SIZE, TILE_SIZE, TILE_SIZE, this);
                 }
             }
         }
-        for (int y = 0; y < GRID_HEIGHT; y++) {
-            for (int x = 0; x < GRID_WIDTH; x++) {
-                int value = gameBoard.grid[x][y]; // Obtener el valor de la celda
-                Image img = imageMap.get(value); // Obtener la imagen correspondiente
-                if (img != null) {
-                    // Dibujar la imagen desplazada para dejar espacio en la parte superior
-                    g.drawImage(img, x * TILE_SIZE, y * TILE_SIZE + SCORE_PANEL_HEIGHT, TILE_SIZE, TILE_SIZE, this);
-                }
-            }
-        }
+        // Dibujar el área de score en la parte superior
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, getWidth(), SCORE_PANEL_HEIGHT); // Fondo negro
+        g.setFont(tetrisFont);
+        g.setColor(Color.WHITE);
+        g.drawString("Score: "+ gameBoard.score, 140, 28); // Puntaje
+        g.drawString("Level: "+ gameBoard.level,10 , 28); // Nivel
     }
 
     public void renderAddedScore(int score) {

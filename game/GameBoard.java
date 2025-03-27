@@ -17,7 +17,7 @@ public class GameBoard {
         this.renderer = renderer;
         rendererSet = true;
     }
-    public boolean collided(TetrisPiece piece) {
+    public boolean canMoveDown(TetrisPiece piece) {
         int[][] shape = piece.getShape();
         int x = piece.getX();
         int y = piece.getY();
@@ -26,29 +26,34 @@ public class GameBoard {
             for (int j = 0; j < 4; j++) {
                 if (shape[i][j] != 0) {
                     // Check for bottom boundary and grid collision
-                    if (y + i + 1 >= HEIGHT || (grid[x + j][y + i + 1] != 0)) {
-                        return true;
+                    if (y + j + 1 >= HEIGHT || grid[x + i][y + j + 1] != 0) {
+                        System.out.println("Collision detected at " + (x + i) + ", " + (y + j + 1) + "because " + grid[x + i][y + j + 1] + "!= 0 ||" + (y + j + 1) + ">= HEIGHT");;
+                        return false;
                     }
                 }
             }
         }
-        return false;
+        return true;
     }
 
-
-    public void placePiece(TetrisPiece piece) {// Agrega la pieza a la cuadrícula y revisa líneas completas
+    public void placePiece(TetrisPiece piece) {
         int[][] shape = piece.getShape();
         int x = piece.getX();
         int y = piece.getY();
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                if (grid[i+x][j+y] == 0) {
-                    grid[i+x][j+y] = shape [i][j];
+                if (shape[i][j] != 0) {
+                    int gridX = i + x;
+                    int gridY = j + y;
+                    if (gridX >= 0 && gridX < WIDTH && gridY >= 0 && gridY < HEIGHT) {
+                        grid[gridX][gridY] = shape[i][j];
+                        System.out.println("Placed block at X: " + gridX + ", Y: " + gridY);
+                    }
                 }
             }
         }
-        piece.setPlaced(true);
-        checkLines();
+    piece.setPlaced(true);
+    checkLines();
     }
 
     public void checkLines() {
