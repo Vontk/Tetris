@@ -4,9 +4,9 @@ package game;
 import render.Renderer;
 
 public class GameBoard {
-    private static final int WIDTH = 10;
-    private static final int HEIGHT = 23;
-    public static final int[][] grid = new int[WIDTH][HEIGHT];
+    private final int WIDTH = 10;
+    private final int HEIGHT = 23;
+    public final int[][] grid = new int[WIDTH][HEIGHT];
     Renderer renderer;
     boolean rendererSet = false;
     private int eliminatedLines = 0;
@@ -17,22 +17,65 @@ public class GameBoard {
         this.renderer = renderer;
         rendererSet = true;
     }
+    /*
     public boolean canMoveDown(TetrisPiece piece) {
+
+        int[][] shape = piece.getShape();
+        int x = piece.getX();
+        int y = piece.getY();
+        System.out.println("About to check if it can move down, piece at x=" + piece.getX() + " y=" + piece.getY());
+
+        for (int i = 0; i < 4; i++) {
+            System.out.println("Checking row " + i);
+            for (int j = 0; j < 4; j++) {
+                System.out.println("Checking column " + j);
+                if (shape[i][j] == 0) continue;
+                // Check for bottom boundary and grid collision
+                if (y + j + 1 >= HEIGHT || grid[x + i][y + j + 1] != 0) {
+                    System.out.println("Collision detected at " + (x + i) + ", " + (y + j + 1) + "because " + grid[x + i][y + j + 1] + "!= 0 ||" + (y + j + 1) + ">= HEIGHT");
+                    return false;
+                }
+            }
+        }
+        System.out.println("No collision detected");
+        return true;
+     }
+     */
+    public boolean canMoveDown(TetrisPiece piece) {
+        System.out.println("Initializing moveDownCheck for piece at x=" + piece.getX() + " y=" + piece.getY());
         int[][] shape = piece.getShape();
         int x = piece.getX();
         int y = piece.getY();
 
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                if (shape[i][j] != 0) {
-                    // Check for bottom boundary and grid collision
-                    if (y + j + 1 >= HEIGHT || grid[x + i][y + j + 1] != 0) {
-                        System.out.println("Collision detected at " + (x + i) + ", " + (y + j + 1) + "because " + grid[x + i][y + j + 1] + "!= 0 ||" + (y + j + 1) + ">= HEIGHT");;
-                        return false;
+        for (int i = 0; i < shape.length; i++) {
+            for (int j = 0; j < shape[i].length; j++) {
+                try {
+                    System.out.println("Checking row " + i + " column " + j);
+                    if (shape[i][j] != 0) {
+                        // Adjust these coordinates based on how your grid is structured
+                        int gridX = x + i;
+                        int gridY = y + j + 1;
+
+                        // Check boundary first
+                        if (gridY >= HEIGHT) {
+                            System.out.println("Bottom boundary hit at " + gridX + "," + gridY);
+                            return false;
+                        }
+
+                        // Check other pieces
+                        if (gridX >= 0 && gridX < WIDTH && gridY >= 0 && grid[gridX][gridY] != 0) {
+                            System.out.println("Piece collision at " + gridX + "," + gridY);
+                            return false;
+                        }
                     }
+                } catch (Exception e) {
+                    System.err.println("Error at i=" + i + ", j=" + j + ": " + e.getMessage());
+                    e.printStackTrace();
+                    return false;
                 }
             }
         }
+        System.out.println("Can move down: true");
         return true;
     }
 
@@ -43,8 +86,8 @@ public class GameBoard {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 if (shape[i][j] != 0) {
-                    int gridX = i + x;
-                    int gridY = j + y;
+                    int gridX = x + i;
+                    int gridY = y + j;
                     if (gridX >= 0 && gridX < WIDTH && gridY >= 0 && gridY < HEIGHT) {
                         grid[gridX][gridY] = shape[i][j];
                         System.out.println("Placed block at X: " + gridX + ", Y: " + gridY);

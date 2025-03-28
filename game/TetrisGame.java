@@ -5,6 +5,7 @@ import render.Renderer;
 import sound.SoundManager;
 
 import javax.swing.*;
+import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -18,7 +19,6 @@ public class TetrisGame {
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     private boolean running = true;
     public TetrisPiece activePiece;
-    private boolean waitCondition = false;
 
     public void startGame() {
         board = new GameBoard();
@@ -34,10 +34,6 @@ public class TetrisGame {
         stop();
     }
 
-    private void setWaitCondition(boolean waitCondition) {
-        this.waitCondition = waitCondition;
-    }
-
     public void start() {
         executor.scheduleAtFixedRate(() -> {
                 if (running) {
@@ -49,27 +45,36 @@ public class TetrisGame {
 
     private void update() {
         // Inside your TetrisGame.update() method
+        System.out.println("updating part 1");
         if (activePiece == null) {
             activePiece = PieceFactory.newPiece();
         }
-
+        System.out.println("updating part 2");
         if (board.canMoveDown(activePiece)) {
+            System.out.println("piece fallen");
             activePiece.fall(); // Move the piece down
+
         } else {
+            System.out.println("piece not fallen");
             board.placePiece(activePiece);
             activePiece = PieceFactory.newPiece(); // Create a new piece
         }
-        if (board.lineHasBlock(0)) {
+        if (board.lineHasBlock(3)) {
+            System.out.println("line has block");
             onGameOver();
         }
 
             System.out.println("Active Piece X: " + activePiece.getX() + ", Y: " + activePiece.getY());
-            System.out.println("Grid: " + java.util.Arrays.deepToString(board.grid));
+            for (int[] element : board.grid){
+                System.out.println(Arrays.toString(element));
+            }
 
     }
 
     private void render() {
+        System.out.println("Rendering...");
         renderer.repaint(); // Redibujar la pantalla.
+        System.out.println("Rendered.");
     }
 
     public void stop() {

@@ -17,8 +17,8 @@ public class Renderer extends JPanel {
     private static final int GRID_HEIGHT = 23;
     private static final int GRID_RENDER_HEIGHT = 20;
     private static final int SCORE_PANEL_HEIGHT = 40; // Espacio para el score en la parte superior
-    private GameBoard gameBoard;
-    private Map<Integer, Image> imageMap;
+    private final GameBoard gameBoard;
+    private final Map<Integer, Image> imageMap;
     private Font tetrisFont;
     private TetrisGame tetrisGame;
 
@@ -38,16 +38,16 @@ public class Renderer extends JPanel {
 
     // Cargar imágenes de los bloques
     private void loadImages() {
-        imageMap.put(0, new ImageIcon("bgBlock.png").getImage());
-        imageMap.put(1, new ImageIcon("blueBlock.png").getImage());
-        imageMap.put(2, new ImageIcon("cyanBlock.png").getImage());
-        imageMap.put(3, new ImageIcon("greenBlock.png").getImage());
-        imageMap.put(4, new ImageIcon("orangeBlock.png").getImage());
-        imageMap.put(5, new ImageIcon("purpleBlock.png").getImage());
-        imageMap.put(6, new ImageIcon("redBlock.png").getImage());
-        imageMap.put(7, new ImageIcon("yellowBlock.png").getImage());
-        try {tetrisFont = Font.createFont(Font.TRUETYPE_FONT, new File("tetris.ttf")).deriveFont(Font.PLAIN, 24);}
-        catch (FontFormatException e) {} catch (IOException e) {} // we don't give a fuck if it fails (it won't)
+        imageMap.put(0, new ImageIcon("resources/bgBlock.png").getImage());
+        imageMap.put(1, new ImageIcon("resources/blueBlock.png").getImage());
+        imageMap.put(2, new ImageIcon("resources/cyanBlock.png").getImage());
+        imageMap.put(3, new ImageIcon("resources/greenBlock.png").getImage());
+        imageMap.put(4, new ImageIcon("resources/orangeBlock.png").getImage());
+        imageMap.put(5, new ImageIcon("resources/purpleBlock.png").getImage());
+        imageMap.put(6, new ImageIcon("resources/redBlock.png").getImage());
+        imageMap.put(7, new ImageIcon("resources/yellowBlock.png").getImage());
+        try {tetrisFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/tetris.ttf")).deriveFont(Font.PLAIN, 24);}
+        catch (FontFormatException | IOException e) {e.printStackTrace();} // we don't give a fuck if it fails (it won't)
     }
 
     @Override
