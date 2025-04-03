@@ -1,14 +1,24 @@
 package game;
 
+import java.util.Random;
+
 public class TetrisPiece {
+    private final static Random random = new Random();
     private int[][] shape;
     private int x, y;
     private boolean placed;
 
     public TetrisPiece(int[][] shape) {
         this.shape = shape;
-        this.x = 3;
+        this.x = random.nextInt(7);
         this.y = 0;
+    }
+
+    public TetrisPiece(TetrisPiece tetrisPiece) {
+        this.shape = tetrisPiece.shape;
+        this.x = tetrisPiece.x;
+        this.y = tetrisPiece.y;
+        this.placed = tetrisPiece.placed;
     }
 
     public int[][] getShape() {return shape;}
@@ -21,19 +31,16 @@ public class TetrisPiece {
     public void setPlaced(boolean placed) {this.placed = placed;}
 
     public void rotate() {
-        if (shape == null || shape.length != 4 || shape[0].length != 4) {
-            throw new IllegalArgumentException("Matrix must be a 4x4 array.");
-        }
-
         int[][] rotatedMatrix = new int[4][4];
 
+        // Correct 90-degree clockwise rotation
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 rotatedMatrix[j][3 - i] = shape[i][j];
             }
         }
 
-        shape = rotatedMatrix; // Update the internal shape array
+        shape = rotatedMatrix;
     }
     /*
     {0, 1, 2, 3},         [12, 8, 4, 0]

@@ -31,7 +31,8 @@ public class Renderer extends JPanel {
         this.gameBoard = board;
         this.imageMap = new HashMap<>();
         loadImages();
-
+        setFocusable(true);
+        requestFocusInWindow();
         // Ajustar el tamaño del panel (200x400 + 40 de espacio extra arriba)
         setPreferredSize(new Dimension(GRID_WIDTH * TILE_SIZE, GRID_RENDER_HEIGHT * TILE_SIZE + SCORE_PANEL_HEIGHT));
     }
@@ -39,12 +40,12 @@ public class Renderer extends JPanel {
     // Cargar imágenes de los bloques
     private void loadImages() {
         imageMap.put(0, new ImageIcon("resources/bgBlock.png").getImage());
-        imageMap.put(1, new ImageIcon("resources/blueBlock.png").getImage());
-        imageMap.put(2, new ImageIcon("resources/cyanBlock.png").getImage());
+        imageMap.put(1, new ImageIcon("resources/cyanBlock.png").getImage());
+        imageMap.put(2, new ImageIcon("resources/redBlock.png").getImage());
         imageMap.put(3, new ImageIcon("resources/greenBlock.png").getImage());
         imageMap.put(4, new ImageIcon("resources/orangeBlock.png").getImage());
         imageMap.put(5, new ImageIcon("resources/purpleBlock.png").getImage());
-        imageMap.put(6, new ImageIcon("resources/redBlock.png").getImage());
+        imageMap.put(6, new ImageIcon("resources/blueBlock.png").getImage());
         imageMap.put(7, new ImageIcon("resources/yellowBlock.png").getImage());
         try {tetrisFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/tetris.ttf")).deriveFont(Font.PLAIN, 24);}
         catch (FontFormatException | IOException e) {e.printStackTrace();} // we don't give a fuck if it fails (it won't)
